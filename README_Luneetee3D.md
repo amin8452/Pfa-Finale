@@ -4,6 +4,52 @@ Fine-tuning du modèle Hunyuan3D-2 de Tencent pour la reconstruction 3D médical
 
 > **⚠️ Note importante**: Ce projet est un sous-dossier du dépôt principal. Pour l'utiliser correctement, suivez les instructions d'installation ci-dessous. Ne tentez pas de cloner directement le sous-dossier Luneetee3D car cela ne fonctionnera pas.
 
+## ⚠️ Résolution des problèmes courants
+
+### Erreur "No such file or directory" lors de l'exécution des scripts
+
+Si vous rencontrez une erreur comme `python3: can't open file '//Luneetee3D/prepare_dataset.py': [Errno 2] No such file or directory`, voici comment la résoudre:
+
+1. **Vérifiez votre répertoire de travail actuel**:
+   ```bash
+   pwd  # Sur Linux/Mac
+   # ou
+   cd   # Sur Windows pour afficher le répertoire courant
+   ```
+
+2. **Utilisez le chemin relatif correct selon votre position**:
+
+   - **Si vous êtes à la racine du dépôt** (dossier `Pfa-Finale`):
+     ```bash
+     # Utilisez cette commande (sans // au début)
+     python Luneetee3D/prepare_dataset.py --input_dir raw_data --output_dir data/luneetee_3d
+     ```
+
+   - **Si vous êtes déjà dans le dossier Luneetee3D**:
+     ```bash
+     # Utilisez simplement le nom du script
+     python prepare_dataset.py --input_dir ../raw_data --output_dir ../data/luneetee_3d
+     ```
+
+   - **Si vous n'êtes pas sûr**, naviguez d'abord vers le bon répertoire:
+     ```bash
+     # Pour aller à la racine du dépôt
+     cd chemin/vers/Pfa-Finale
+
+     # Ou pour aller directement dans le dossier Luneetee3D
+     cd chemin/vers/Pfa-Finale/Luneetee3D
+     ```
+
+3. **Pour Kaggle/Colab**, utilisez le préfixe `!` pour les commandes shell:
+   ```python
+   # Vérifiez d'abord où vous êtes
+   !pwd
+   !ls
+
+   # Puis exécutez le script avec le chemin approprié
+   !python prepare_dataset.py --input_dir raw_data --output_dir data/luneetee_3d
+   ```
+
 <p align="center">
   <img src="https://github.com/user-attachments/assets/efb402a1-0b09-41e0-a6cb-259d442e76aa" width="600">
 </p>
@@ -198,11 +244,17 @@ Le script `prepare_dataset.py` effectue les opérations suivantes:
 
 **Si vous avez utilisé l'option A (dépôt complet):**
 ```bash
+# Assurez-vous d'être dans le répertoire racine du dépôt (Pfa-Finale)
 python Luneetee3D/prepare_dataset.py --input_dir raw_data --output_dir data/luneetee_3d --split_ratio 0.7,0.15,0.15
+
+# Si vous rencontrez une erreur de chemin, essayez:
+cd Luneetee3D
+python prepare_dataset.py --input_dir ../raw_data --output_dir ../data/luneetee_3d --split_ratio 0.7,0.15,0.15
 ```
 
 **Si vous avez utilisé l'option B ou C (dossier Luneetee3D uniquement):**
 ```bash
+# Assurez-vous d'être dans le dossier Luneetee3D
 python prepare_dataset.py --input_dir raw_data --output_dir data/luneetee_3d --split_ratio 0.7,0.15,0.15
 ```
 
@@ -228,11 +280,17 @@ Pour fine-tuner le modèle:
 
 **Si vous avez utilisé l'option A (dépôt complet):**
 ```bash
+# Assurez-vous d'être dans le répertoire racine du dépôt (Pfa-Finale)
 python Luneetee3D/train.py --cfg Luneetee3D/configs/luneetee.yaml --output_dir output/luneetee_model
+
+# Si vous rencontrez une erreur de chemin, essayez:
+cd Luneetee3D
+python train.py --cfg configs/luneetee.yaml --output_dir ../output/luneetee_model
 ```
 
 **Si vous avez utilisé l'option B ou C (dossier Luneetee3D uniquement):**
 ```bash
+# Assurez-vous d'être dans le dossier Luneetee3D
 python train.py --cfg configs/luneetee.yaml --output_dir output/luneetee_model
 ```
 
@@ -275,11 +333,17 @@ Pour évaluer un modèle entraîné:
 
 **Si vous avez utilisé l'option A (dépôt complet):**
 ```bash
+# Assurez-vous d'être dans le répertoire racine du dépôt (Pfa-Finale)
 python Luneetee3D/evaluate.py --cfg Luneetee3D/configs/luneetee.yaml --checkpoint output/luneetee_model/best_model.pt --output_dir evaluation --visualize
+
+# Si vous rencontrez une erreur de chemin, essayez:
+cd Luneetee3D
+python evaluate.py --cfg configs/luneetee.yaml --checkpoint ../output/luneetee_model/best_model.pt --output_dir ../evaluation --visualize
 ```
 
 **Si vous avez utilisé l'option B ou C (dossier Luneetee3D uniquement):**
 ```bash
+# Assurez-vous d'être dans le dossier Luneetee3D
 python evaluate.py --cfg configs/luneetee.yaml --checkpoint output/luneetee_model/best_model.pt --output_dir evaluation --visualize
 ```
 
@@ -306,11 +370,17 @@ Pour exécuter l'inférence sur une seule image:
 
 **Si vous avez utilisé l'option A (dépôt complet):**
 ```bash
+# Assurez-vous d'être dans le répertoire racine du dépôt (Pfa-Finale)
 python Luneetee3D/demo.py --image path/to/image.jpg --checkpoint output/luneetee_model/best_model.pt --output_dir demo_output
+
+# Si vous rencontrez une erreur de chemin, essayez:
+cd Luneetee3D
+python demo.py --image ../path/to/image.jpg --checkpoint ../output/luneetee_model/best_model.pt --output_dir ../demo_output
 ```
 
 **Si vous avez utilisé l'option B ou C (dossier Luneetee3D uniquement):**
 ```bash
+# Assurez-vous d'être dans le dossier Luneetee3D
 python demo.py --image path/to/image.jpg --checkpoint output/luneetee_model/best_model.pt --output_dir demo_output
 ```
 
