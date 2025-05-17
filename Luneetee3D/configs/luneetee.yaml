@@ -1,0 +1,36 @@
+data:
+  dataset: LuneeteeDataset
+  root_dir: data/luneetee_3d
+  train_split: train
+  val_split: val
+  test_split: test
+  image_size: 512
+
+model:
+  name: Hunyuan3D
+  pretrained_path: tencent/Hunyuan3D-2
+  subfolder: hunyuan3d-dit-v2-0
+  texture_subfolder: hunyuan3d-paint-v2-0
+
+train:
+  batch_size: 2
+  epochs: 50
+  lr: 1e-4
+  min_lr: 1e-6
+  weight_decay: 0.01
+  num_workers: 4
+  use_fp16: true
+  num_inference_steps: 50
+  freeze_encoder: false
+  chamfer_weight: 1.0
+  normal_weight: 0.5
+  fscore_weight: 1.0
+  vis_interval: 5
+  output_dir: output/luneetee_model
+
+eval:
+  metrics: [chamfer_distance, normal_consistency, fscore, volume_difference, surface_area_difference]
+  num_samples: 10000
+  fscore_threshold: 0.01
+  use_fp16: true
+  num_inference_steps: 50
