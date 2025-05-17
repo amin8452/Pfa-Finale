@@ -2,6 +2,8 @@
 
 Fine-tuning du modèle Hunyuan3D-2 de Tencent pour la reconstruction 3D médicale, spécifiquement pour les structures craniofaciales des patients atteints de Luneetee.
 
+> **⚠️ Note importante**: Ce projet est un sous-dossier du dépôt principal. Pour l'utiliser correctement, suivez les instructions d'installation ci-dessous. Ne tentez pas de cloner directement le sous-dossier Luneetee3D car cela ne fonctionnera pas.
+
 <p align="center">
   <img src="https://github.com/user-attachments/assets/efb402a1-0b09-41e0-a6cb-259d442e76aa" width="600">
 </p>
@@ -92,14 +94,40 @@ Luneetee3D/
 
 ### Configuration
 
-1. Cloner le dépôt:
+1. Obtenir le code:
+
+**Option A: Cloner le dépôt complet (recommandé)**
 ```bash
 git clone https://github.com/amin8452/Pfa-Finale.git
 cd Pfa-Finale
 ```
 
+**Option B: Télécharger uniquement le dossier Luneetee3D (pour Kaggle, Colab, etc.)**
+```bash
+# Installer svn si nécessaire
+apt-get install -y subversion
+
+# Télécharger uniquement le dossier Luneetee3D
+svn export https://github.com/amin8452/Pfa-Finale/trunk/Luneetee3D
+cd Luneetee3D
+```
+
+**Option C: Télécharger l'archive ZIP**
+```bash
+# Télécharger l'archive du dépôt
+wget https://github.com/amin8452/Pfa-Finale/archive/refs/heads/master.zip
+
+# Extraire uniquement le dossier Luneetee3D
+unzip master.zip "Pfa-Finale-master/Luneetee3D/*" -d .
+mv Pfa-Finale-master/Luneetee3D .
+rm -rf Pfa-Finale-master master.zip
+cd Luneetee3D
+```
+
 Vous pouvez également accéder directement au projet sur GitHub:
 [https://github.com/amin8452/Pfa-Finale/tree/master/Luneetee3D](https://github.com/amin8452/Pfa-Finale/tree/master/Luneetee3D)
+
+> **Note pour Kaggle/Colab**: Utilisez l'option B ou C ci-dessus. N'essayez pas de cloner directement le sous-dossier Luneetee3D car cela ne fonctionnera pas.
 
 2. Créer un environnement conda:
 ```bash
@@ -114,11 +142,30 @@ conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvi
 ```
 
 4. Installer les dépendances:
+
+**Si vous avez utilisé l'option A (dépôt complet):**
 ```bash
 pip install -r Luneetee3D/requirements.txt
 
 # Installer les rasterizers personnalisés pour la génération de textures
 cd hy3dgen/texgen/custom_rasterizer
+python setup.py install
+cd ../../..
+cd hy3dgen/texgen/differentiable_renderer
+python setup.py install
+cd ../../..
+```
+
+**Si vous avez utilisé l'option B ou C (dossier Luneetee3D uniquement):**
+```bash
+pip install -r requirements.txt
+
+# Vous devrez également installer Hunyuan3D-2
+pip install git+https://github.com/Tencent/Hunyuan3D-2.git
+
+# Ou télécharger et installer manuellement les rasterizers
+git clone https://github.com/Tencent/Hunyuan3D-2.git
+cd Hunyuan3D-2/hy3dgen/texgen/custom_rasterizer
 python setup.py install
 cd ../../..
 cd hy3dgen/texgen/differentiable_renderer
@@ -149,8 +196,14 @@ Le script `prepare_dataset.py` effectue les opérations suivantes:
 - Normalisation des images et des maillages
 - Organisation des données dans la structure requise
 
+**Si vous avez utilisé l'option A (dépôt complet):**
 ```bash
 python Luneetee3D/prepare_dataset.py --input_dir raw_data --output_dir data/luneetee_3d --split_ratio 0.7,0.15,0.15
+```
+
+**Si vous avez utilisé l'option B ou C (dossier Luneetee3D uniquement):**
+```bash
+python prepare_dataset.py --input_dir raw_data --output_dir data/luneetee_3d --split_ratio 0.7,0.15,0.15
 ```
 
 Options disponibles:
@@ -173,8 +226,14 @@ Le fichier `configs/luneetee.yaml` contient tous les paramètres d'entraînement
 
 Pour fine-tuner le modèle:
 
+**Si vous avez utilisé l'option A (dépôt complet):**
 ```bash
 python Luneetee3D/train.py --cfg Luneetee3D/configs/luneetee.yaml --output_dir output/luneetee_model
+```
+
+**Si vous avez utilisé l'option B ou C (dossier Luneetee3D uniquement):**
+```bash
+python train.py --cfg configs/luneetee.yaml --output_dir output/luneetee_model
 ```
 
 Options disponibles:
@@ -187,8 +246,14 @@ Options disponibles:
 
 Pour reprendre l'entraînement à partir d'un checkpoint:
 
+**Si vous avez utilisé l'option A (dépôt complet):**
 ```bash
 python Luneetee3D/train.py --cfg Luneetee3D/configs/luneetee.yaml --output_dir output/luneetee_model --resume --checkpoint output/luneetee_model/checkpoint_epoch_10.pt
+```
+
+**Si vous avez utilisé l'option B ou C (dossier Luneetee3D uniquement):**
+```bash
+python train.py --cfg configs/luneetee.yaml --output_dir output/luneetee_model --resume --checkpoint output/luneetee_model/checkpoint_epoch_10.pt
 ```
 
 ### Suivi de l'entraînement
@@ -208,8 +273,14 @@ Des visualisations des reconstructions sont générées périodiquement dans le 
 
 Pour évaluer un modèle entraîné:
 
+**Si vous avez utilisé l'option A (dépôt complet):**
 ```bash
 python Luneetee3D/evaluate.py --cfg Luneetee3D/configs/luneetee.yaml --checkpoint output/luneetee_model/best_model.pt --output_dir evaluation --visualize
+```
+
+**Si vous avez utilisé l'option B ou C (dossier Luneetee3D uniquement):**
+```bash
+python evaluate.py --cfg configs/luneetee.yaml --checkpoint output/luneetee_model/best_model.pt --output_dir evaluation --visualize
 ```
 
 Options disponibles:
@@ -233,8 +304,14 @@ Les résultats d'évaluation sont enregistrés dans `output_dir/metrics.json` et
 
 Pour exécuter l'inférence sur une seule image:
 
+**Si vous avez utilisé l'option A (dépôt complet):**
 ```bash
 python Luneetee3D/demo.py --image path/to/image.jpg --checkpoint output/luneetee_model/best_model.pt --output_dir demo_output
+```
+
+**Si vous avez utilisé l'option B ou C (dossier Luneetee3D uniquement):**
+```bash
+python demo.py --image path/to/image.jpg --checkpoint output/luneetee_model/best_model.pt --output_dir demo_output
 ```
 
 Options disponibles:

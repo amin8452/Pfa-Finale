@@ -25,7 +25,7 @@ Hunyuan3D-2 is an advanced large-scale 3D synthesis system developed by Tencent.
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/luneetee3d.git
+git clone https://github.com/amin8452/Pfa-Finale/tree/master/Luneetee3D
 cd luneetee3d
 ```
 
