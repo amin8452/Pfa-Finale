@@ -98,6 +98,9 @@ git clone https://github.com/amin8452/Pfa-Finale.git
 cd Pfa-Finale
 ```
 
+Vous pouvez également accéder directement au projet sur GitHub:
+[https://github.com/amin8452/Pfa-Finale/tree/master/Luneetee3D](https://github.com/amin8452/Pfa-Finale/tree/master/Luneetee3D)
+
 2. Créer un environnement conda:
 ```bash
 conda create -n luneetee3d python=3.9
